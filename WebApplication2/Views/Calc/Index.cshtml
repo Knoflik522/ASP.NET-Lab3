@@ -1,0 +1,46 @@
+﻿@model dynamic
+@{
+    ViewData["Title"] = "Calculator";
+}
+
+<h2>Calculator</h2>
+
+<form id="calcForm">
+    <input type="number" id="numberA" placeholder="Enter number A" required />
+    <input type="number" id="numberB" placeholder="Enter number B" required />
+
+    <select id="operation">
+        <option value="add">Add</option>
+        <option value="subtract">Subtract</option>
+        <option value="multiply">Multiply</option>
+        <option value="divide">Divide</option>
+    </select>
+
+    <button type="button" onclick="performCalculation()">Calculate</button>
+</form>
+
+<h3>Result: <span id="result">-</span></h3>
+
+<script>
+async function performCalculation() {
+    const a = document.getElementById("numberA").value;
+    const b = document.getElementById("numberB").value;
+    const operation = document.getElementById("operation").value;
+
+    try {
+        const response = await fetch(`/${operation}?a=${a}&b=${b}`);
+        
+        if (!response.ok) {
+            const errorText = await response.text();
+            document.getElementById("result").textContent = `Error: ${errorText}`;
+        } else {
+            const data = await response.text(); 
+            document.getElementById("result").textContent = data;
+        }
+    } catch (error) {
+        document.getElementById("result").textContent = `Error: ${error.message}`;
+    }
+}
+
+
+</script>
